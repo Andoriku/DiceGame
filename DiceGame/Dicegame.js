@@ -72,22 +72,20 @@ function newHp(Hp, attTotal) {                             //calculates the user
 
 //-------------------------------------------------Battle Sequence---------------------------------------------------//
 
-function attRound(userHp=50,compHp=50) {                   //First Round function call. This exists because the
-  var userD20 = roll("d20");                               //health counter needs to start at 50, but cannot get
-  var compD20 = roll("d20");                               //haulted after the first round. The counter continues
-                                                           //deducting hp in the AttRound() funtion thus not resetting.
-
+function attRound(userHp=50,compHp=50) {                   //Battle function call.
+  var userD20 = roll("d20");
+  var compD20 = roll("d20");
 
   if (userD20 > compD20) {
     var attTotal = userAttFirst();
     var compHp = newHp(compHp, attTotal);
     attTotal = compAttSecond();
     var userHp = newHp(userHp, attTotal);
+    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp)
     if (userHp > 0 && compHp > 0) {
       var nextRound = attRound(userHp,compHp);
     }
     else {
-
       end(userHp,compHp);
     }
   }
@@ -96,11 +94,50 @@ function attRound(userHp=50,compHp=50) {                   //First Round functio
     userHp = newHp(userHp, attTotal);
     attTotal = userAttSecond();
     compHp = newHp(compHp, attTotal);
+    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp)
     if (userHp > 0 && compHp > 0) {
       nextRound = attRound(userHp,compHp);
     }
     else {
       end(userHp,compHp);
+    }
+  }
+  else if (userD20 = compD20) {
+    attRound();
+  }
+
+//-----------------------------------------------Boss Battle Sequence------------------------------------------------//
+
+}
+
+function bossAttRound(userHp=50,compHp=80) {                   //Boss battle function call.
+  var userD20 = roll("d20");
+  var compD20 = roll("d20");
+
+  if (userD20 > compD20) {
+    var attTotal = userAttFirst();
+    var compHp = newHp(compHp, attTotal);
+    attTotal = compAttSecond();
+    var userHp = newHp(userHp, attTotal);
+    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp)
+    if (userHp > 0 && compHp > 0) {
+      var nextRound = attRound(userHp,compHp);
+    }
+    else {
+      finalEnd(userHp,compHp);
+    }
+  }
+  else if (compD20 > userD20) {
+    attTotal = compAttFirst();
+    userHp = newHp(userHp, attTotal);
+    attTotal = userAttSecond();
+    compHp = newHp(compHp, attTotal);
+    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp)
+    if (userHp > 0 && compHp > 0) {
+      nextRound = attRound(userHp,compHp);
+    }
+    else {
+      finalEnd(userHp,compHp);
     }
   }
   else if (userD20 = compD20) {
@@ -131,59 +168,218 @@ function userAttSecond(attTotal) {                         //if the user attacks
 //-----------------------------------------------Attack Functions----------------------------------------------------//
 
 function userAtt() {                              //attack total for the user's attack phase
-  var userAttRoll = roll("d12");
-  var compDeffRoll = roll("d10");
+  var userAttRoll = userAttMod();
+  var compDeffRoll = compDeffMod();
   var attTotal;
   if (userAttRoll > compDeffRoll) {
      attTotal = userAttRoll - compDeffRoll;
+     alert("Your attack lands! your opponent takes " + attTotal + " damage!");
+     console.log("Your opponent takes " + attTotal + " damage!");
   }
   else if (userAttRoll < compDeffRoll) {
      attTotal = 0;
+     alert("Your opponent blocks your attack!")
+     console.log("Your opponent takes " + attTotal + " damage!");
   }
   else if (userAttRoll = compDeffRoll) {
     var tieRoll = roll("d8");
     if (tieRoll <= 4) {
        attTotal = 0;
+       alert("Your opponent blocks your attack!")
+       console.log("Your opponent takes " + attTotal + " damage!");
     }
     else if (tieRoll > 4) {
       attTotal = tieRoll - 4;
+      alert("Your attack lands! your opponent takes " + attTotal + " damage!");
+      console.log("Your opponent takes " + attTotal + " damage!");
     }
   }
   return attTotal;
 }
 
 function compAtt() {                              //attack total for the computer's attack phase
-  var compAttRoll = roll("d12");
-  var userDeffRoll = roll("d10");
+  var compAttRoll = compAttMod();
+  var userDeffRoll = userDeffMod();
   var attTotal;
   if (compAttRoll > userDeffRoll) {
      attTotal = compAttRoll - userDeffRoll;
+     alert("Your block was ineffective! you take " + attTotal + " damage!");
+     console.log("You take " + attTotal + " damage!")
   }
   else if (compAttRoll < userDeffRoll) {
      attTotal = 0;
+     alert("You sucessfuly block the attack!");
+     console.log("You take " + attTotal + " damage!")
   }
   else if (compAttRoll = userDeffRoll) {
     var tieRoll = roll("d8");
     if (tieRoll <= 4) {
        attTotal = 0;
+       alert("You sucessfuly block the attack!");
+       console.log("You take " + attTotal + " damage!")
     }
     else if (tieRoll > 4) {
       attTotal = tieRoll - 4;
+      alert("Your block was ineffective! you take " + attTotal + " damage!");
+      console.log("You take " + attTotal + " damage!")
     }
   }
   return attTotal;
 }
 
-//----------------------------------------------End Game Function----------------------------------------------------//
+//-------------------------------------------------Mod Function------------------------------------------------------//
+
+function userAttMod() {
+  var userChoice = prompt("Time to Attack! Pick either:\n" +
+                          "         Super Punch= sp\n" +
+                          "         Flaming Kick= fk\n" +
+                          "         Thundering Chop= tc\n" +
+                          "         Barbaric Throw= bt\n", "'sp','fk','tc', or 'bt'");
+  if (userChoice === "sp") {
+    var totalDamage = roll("d12") + (3 * roll("d4"));
+    return totalDamage;
+  }
+  else if (userChoice === "fk") {
+    var totalDamage = roll("d12") + (2 * roll("d6"));
+    return totalDamage;
+  }
+  else if (userChoice === "tc") {
+    var totalDamage = roll("d20") + (1 * roll("d8"));
+    return totalDamage;
+  }
+  else if (userChoice === "bt") {
+    var totalDamage = roll("d20") + (2 * roll("d6"));
+    return totalDamage;
+  }
+  else {
+    alert ("Oh no! you need to type 'sp' or 'fk'!");
+    userAttMod();
+  }
+}
+function compDeffMod() {
+  var compChoice = Math.floor(Math.random() * 2) +1;
+  if (compChoice == '1') {
+    var totalDeff = roll("d120") + (3 * roll("d4"));
+    return totalDeff;
+  }
+  else if (compChoice == '2') {
+    var totalDeff = roll("d10") + (2 * roll("d6"));
+    return totalDeff;
+  }
+}
+function compAttMod() {
+  var compChoice =  Math.floor(Math.random() * 2) +1;
+
+  if (compChoice == '1') {
+    var totalDamage = roll("d12") + (3 * roll("d4"));
+    return totalDamage;
+  }
+  else if (compChoice === '2') {
+    var totalDamage = roll("d12") + (2 * roll("d6"));
+    return totalDamage;
+  }
+}
+function userDeffMod() {
+  var compChoice = prompt("pick either High Block or Low Guard to add to your defence strength", "'hb' or 'lg'");
+  if (compChoice === "hb") {
+    var totalDeff = roll("d10") + (3 * roll("d4"));
+    return totalDeff;
+  }
+  else if (compChoice === "lg") {
+    var totalDeff = roll("d10") + (2 * roll("d6"));
+    return totalDeff;
+  }
+  else {
+    alert ("Oh no! you need to type 'hb' or 'lg'!");
+    userDeffMod();
+  }
+}
+//----------------------------------------------End Round Function----------------------------------------------------//
 
 function end(currentUserHp,currentcompHp) {
   userHp = currentUserHp;
   compHp = currentcompHp;
   if (userHp <= 0) {
-    console.log("you lose!");
+    var restart = prompt("Your Opponent overtakes you! you lose and black out! Play again?", "'y' or 'n'");
+    if (restart === "y") {
+      attRound();
+    }
+    else if (restart === "n") {
+      alert ("GAME OVER! Thanks for playing!")
+    }
+    else {
+      alert ("Oh no! you need to type 'y' or 'n'!");
+      end();
+    }
   }
   else if (compHp <= 0) {
-    console.log("you win!");
+    var response = prompt("You have beaten your opponent! Are you ready to move on to your next one, or can you handle the Grand Master!?", "'y','n' or 'gm'");
+    if (response === "y") {
+      alert("Your next challenger appears!");
+      AttRound();
+    }
+    else if (response === "n") {
+      alert ("GAME OVER! Thanks for playing!")
+    }
+    else if (response === "gm") {
+      alert("The Grand Master Approaches...")
+      alert("He is much more powerful than the other's you've ever faced...");
+      alert("The FINAL BATTLE commences!");
+      bossAttRound();
+    }
+    else {
+      alert ("Oh no! you need to type 'y','n', or 'gm'!");
+      end();
+    }
   }
 }
-attRound();
+
+//---------------------------------------------Start Game Function---------------------------------------------------//
+
+function finalEnd(currentUserHp,currentcompHp) {
+  userHp = currentUserHp;
+  compHp = currentcompHp;
+  if (userHp <= 0) {
+    var restart = prompt("The Grand Master overtakes you! you lose and black out! Play again?", "'y' or 'n'");
+    if (restart === "y") {
+      attRound();
+    }
+    else if (restart === "n") {
+      alert ("GAME OVER! Thanks for playing!")
+    }
+    else {
+      alert ("Oh no! you need to type 'y' or 'n'!");
+      end();
+    }
+  }
+  else if (compHp <= 0) {
+    var endGame = prompt("You have beaten the Grand Master and become the Tournament Champion! You have won Karate Tournament 2017! will you continue your reign of glory and vie for next years Championship?" , "'y' or 'n'");
+    if (endGame === "y") {
+      alert("You arrive the next year at the torunament. All eyes are on you this year as you defend your title!");
+      AttRound();
+    }
+    else if (endGame === "n") {
+      alert ("You have solidified yourself into Karate history and will be remebered for your acheavements. Well done fighter!!")
+    }
+    else {
+      alert ("Oh no! you need to type 'y','n', or 'gm'!");
+      finalEnd();
+    }
+  }
+}
+
+//---------------------------------------------Start Game Function---------------------------------------------------//
+
+function startGame() {
+  var start = prompt("Welcome to Karate Tournament 2017! Are you ready to play Karate Tournament 2017?","'y' or 'n'")
+  if (start === "y") {
+    alert("A challenger appears!");
+    attRound();
+  }
+  else if (start === "n") {
+    alert ("Come back when you are ready, Champion. Until then, train hard!")
+  }
+  else {
+    alert ("Oh no! you need to type 'y' or 'n'!");
+  }
+}
