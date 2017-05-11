@@ -82,7 +82,7 @@ function attRound(userHp=50,compHp=50) {                   //Battle function cal
     attTotal = compAttSecond();
     var userHp = newHp(userHp, attTotal);
     alert("Your hp: " + userHp + "        " + "comp Hp:" + compHp);
-    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp)
+    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp);
     if (userHp > 0 && compHp > 0) {
       var nextRound = attRound(userHp,compHp);
     }
@@ -96,7 +96,7 @@ function attRound(userHp=50,compHp=50) {                   //Battle function cal
     attTotal = userAttSecond();
     compHp = newHp(compHp, attTotal);
     alert("Your hp: " + userHp + "        " + "comp Hp:" + compHp);
-    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp)
+    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp);
     if (userHp > 0 && compHp > 0) {
       nextRound = attRound(userHp,compHp);
     }
@@ -119,7 +119,7 @@ function bossAttRound(userHp=50,compHp=80) {                   //Boss battle fun
   if (userD20 > compD20) {
     var attTotal = userAttFirst();
     var compHp = newHp(compHp, attTotal);
-    attTotal = compAttSecond();
+    attTotal = bossCompAttSecond();
     var userHp = newHp(userHp, attTotal);
     alert("Your hp: " + userHp + "        " + "comp Hp:" + compHp);
     console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp);
@@ -131,7 +131,7 @@ function bossAttRound(userHp=50,compHp=80) {                   //Boss battle fun
     }
   }
   else if (compD20 > userD20) {
-    attTotal = compAttFirst();
+    attTotal = bossCompAttFirst();
     userHp = newHp(userHp, attTotal);
     attTotal = userAttSecond();
     compHp = newHp(compHp, attTotal);
@@ -160,8 +160,16 @@ function compAttSecond(attTotal) {                         //if the computer att
   var attTotal =  compAtt();                                      //deducts that attack total from the user's Hp.
   return attTotal;
 }
+function bossCompAttSecond(attTotal) {                         //if the computer attacks second, runs the computer's attack,
+  var attTotal =  bossCompAtt();                                      //deducts that attack total from the user's Hp.
+  return attTotal;
+}
 function compAttFirst(attTotal) {                         //if the computer attacks first, runs the computer's attack,
   var attTotal = compAtt();                                      //deducts that attack total from the user's Hp.
+  return attTotal;
+}
+function bossCompAttFirst(attTotal) {                         //if the computer attacks first, runs the computer's attack,
+  var attTotal = bossCompAtt();                                      //deducts that attack total from the user's Hp.
   return attTotal;
 }
 function userAttSecond(attTotal) {                         //if the user attacks second, runs the user's attack,
@@ -182,14 +190,14 @@ function userAtt() {                              //attack total for the user's 
   }
   else if (userAttRoll < compDeffRoll) {
      attTotal = 0;
-     alert("Your opponent blocks your attack!")
+     alert("Your opponent blocks your attack!");
      console.log("Your opponent takes " + attTotal + " damage!");
   }
   else if (userAttRoll = compDeffRoll) {
     var tieRoll = roll("d8");
     if (tieRoll <= 4) {
        attTotal = 0;
-       alert("Your opponent blocks your attack!")
+       alert("Your opponent blocks your attack!");
        console.log("Your opponent takes " + attTotal + " damage!");
     }
     else if (tieRoll > 4) {
@@ -213,14 +221,14 @@ function compAtt() {                              //attack total for the compute
   else if (compAttRoll < userDeffRoll) {
      attTotal = 0;
      alert("You sucessfuly block the attack!");
-     console.log("You take " + attTotal + " damage!")
+     console.log("You take " + attTotal + " damage!");
   }
   else if (compAttRoll = userDeffRoll) {
     var tieRoll = roll("d8");
     if (tieRoll <= 4) {
        attTotal = 0;
        alert("You sucessfuly block the attack!");
-       console.log("You take " + attTotal + " damage!")
+       console.log("You take " + attTotal + " damage!");
     }
     else if (tieRoll > 4) {
       attTotal = tieRoll - 4;
@@ -230,7 +238,35 @@ function compAtt() {                              //attack total for the compute
   }
   return attTotal;
 }
-
+function bossCompAtt() {                              //attack total for the boss's attack phase
+  var compAttRoll = bossCompAttMod();
+  var userDeffRoll = userDeffMod();
+  var attTotal;
+  if (compAttRoll > userDeffRoll) {
+     attTotal = compAttRoll - userDeffRoll;
+     alert("Your block was ineffective! you take " + attTotal + " damage!");
+     console.log("You take " + attTotal + " damage!");
+  }
+  else if (compAttRoll < userDeffRoll) {
+     attTotal = 0;
+     alert("You sucessfuly block the attack!");
+     console.log("You take " + attTotal + " damage!");
+  }
+  else if (compAttRoll = userDeffRoll) {
+    var tieRoll = roll("d8");
+    if (tieRoll <= 4) {
+       attTotal = 0;
+       alert("You sucessfuly block the attack!");
+       console.log("You take " + attTotal + " damage!");
+    }
+    else if (tieRoll > 4) {
+      attTotal = tieRoll - 4;
+      alert("Your block was ineffective! you take " + attTotal + " damage!");
+      console.log("You take " + attTotal + " damage!");
+    }
+  }
+  return attTotal;
+}
 //-------------------------------------------------Mod Function------------------------------------------------------//
 
 function userAttMod() {
@@ -240,17 +276,17 @@ function userAttMod() {
                           "         Thundering Chop= tc\n" +
                           "         Barbaric Throw= bt\n", "'sp','fk','tc','bt' or 'im done'");
   if (userChoice === "sp") {
-    var totalDamage = roll("d12") + (3 * roll("d4"));
+    var totalDamage = roll("d12") + (4 * roll("d4"));
     alert("You threw a Speed Punch for " + totalDamage + "!");
     return totalDamage;
   }
   else if (userChoice === "fk") {
-    var totalDamage = roll("d12") + (2 * roll("d6"));
+    var totalDamage = roll("d12") + (3 * roll("d6"));
     alert("you threw a Flaming Kick for " + totalDamage + "!");
     return totalDamage;
   }
   else if (userChoice === "tc") {
-    var totalDamage = roll("d20") + (1 * roll("d8"));
+    var totalDamage = roll("d20") + (1 * roll("d12"));
     alert("You threw a Thunder Chop for " + totalDamage + "!");
     return totalDamage;
   }
@@ -259,57 +295,89 @@ function userAttMod() {
     alert("You exicuted a Barbaric Throw for " + totalDamage + "!");
     return totalDamage;
   }
-  else if (compChoice === "im done") {
-    alert("Thanks for playin!");
+  else if (userChoice === "im done") {
+    var quit = quitOut();
+    return quit;
   }
   else {
     alert ("Oh no! you need to type 'sp','fk' or 'im done'!");
     return userAttMod();
   }
 }
-function compDeffMod() {
-  var compChoice = Math.floor(Math.random() * 2) +1;
-  if (compChoice == '1') {
-    var totalDeff = roll("d120") + (3 * roll("d4"));
-    return totalDeff;
-  }
-  else if (compChoice == '2') {
-    var totalDeff = roll("d10") + (2 * roll("d6"));
-    return totalDeff;
-  }
-}
 function compAttMod() {
-  var compChoice =  Math.floor(Math.random() * 2) +1;
+  var compChoice =  Math.floor(Math.random() * 3) +1;
 
   if (compChoice == '1') {
     var totalDamage = roll("d12") + (3 * roll("d4"));
     alert("He threw a Speed Punch for " + totalDamage + "!");
     return totalDamage;
   }
-  else if (compChoice === '2') {
+  else if (compChoice == '2') {
     var totalDamage = roll("d12") + (2 * roll("d6"));
     alert("He threw a Flaming Kick for " + totalDamage + "!");
     return totalDamage;
   }
+  else if (compChoice == '3') {
+    var totalDamage = roll("d8") + (2 * roll("d10"));
+    alert("He threw a Thunder Chop for " + totalDamage + "!");
+    return totalDamage;
+  }
+}
+function bossCompAttMod() {
+  var compChoice =  Math.floor(Math.random() * 4) +1;
+
+  if (compChoice == '1') {
+    var totalDamage = roll("d12") + (3 * roll("d4"));
+    alert("He threw a Speed Punch for " + totalDamage + "!");
+    return totalDamage;
+  }
+  else if (compChoice == '2') {
+    var totalDamage = roll("d12") + (2 * roll("d6"));
+    alert("He threw a Flaming Kick for " + totalDamage + "!");
+    return totalDamage;
+  }
+  else if (compChoice == '3') {
+    var totalDamage = roll("d20") + (1 * roll("d10"));
+    alert("He threw a Thunder Chop for " + totalDamage + "!");
+    return totalDamage;
+  }
+  else if (compChoice == '4') {
+    var totalDamage = roll("d20") + (2 * roll("d6"));
+    alert("He exicuted a Barbaric Throw for " + totalDamage + "!");
+    return totalDamage;
+  }
 }
 function userDeffMod() {
-  var compChoice = prompt("pick either High Block or Low Guard to add to your defence strength", "'hb','lg' or 'im done'");
-  if (compChoice === "hb") {
-    var totalDeff = roll("d10") + (3 * roll("d4"));
+  var userChoice = prompt("pick either High Block or Low Guard to add to your defence strength", "'hb','lg' or 'im done'");
+  if (userChoice === "hb") {
+    var totalDeff = roll("d12") + (4 * roll("d4"));
     return totalDeff;
   }
-  else if (compChoice === "lg") {
-    var totalDeff = roll("d10") + (2 * roll("d6"));
+  else if (userChoice === "lg") {
+    var totalDeff = roll("d20") + (2 * roll("d6"));
     return totalDeff;
   }
-  else if (compChoice === "im done") {
-    alert("Thanks for playin!");
+  else if (userChoice === "im done") {
+    var quit = quitOut();
+    return quit;
   }
   else {
     alert ("Oh no! you need to type 'hb' or 'lg' or 'im done'!");
     return userDeffMod();
   }
 }
+function compDeffMod() {
+  var compChoice = Math.floor(Math.random() * 2) +1;
+  if (compChoice == '1') {
+    var totalDeff = roll("d10") + (4 * roll("d4"));
+    return totalDeff;
+  }
+  else if (compChoice == '2') {
+    var totalDeff = roll("d12") + (3 * roll("d6"));
+    return totalDeff;
+  }
+}
+
 //----------------------------------------------End Round Function----------------------------------------------------//
 
 function end(currentUserHp,currentcompHp) {
@@ -350,7 +418,7 @@ function end(currentUserHp,currentcompHp) {
   }
 }
 
-//---------------------------------------------Start Game Function---------------------------------------------------//
+//---------------------------------------------End Game Function---------------------------------------------------//
 
 function finalEnd(currentUserHp,currentcompHp) {
   userHp = currentUserHp;
@@ -383,7 +451,10 @@ function finalEnd(currentUserHp,currentcompHp) {
     }
   }
 }
-
+function quitOut() {
+  var quit = alert("Thanks for playin!");
+  return quit;
+}
 //---------------------------------------------Start Game Function---------------------------------------------------//
 
 function startGame() {
@@ -397,5 +468,6 @@ function startGame() {
   }
   else {
     alert ("Oh no! you need to type 'y' or 'n'!");
+    return startGame();
   }
 }
