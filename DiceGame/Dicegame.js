@@ -81,6 +81,7 @@ function attRound(userHp=50,compHp=50) {                   //Battle function cal
     var compHp = newHp(compHp, attTotal);
     attTotal = compAttSecond();
     var userHp = newHp(userHp, attTotal);
+    alert("Your hp: " + userHp + "        " + "comp Hp:" + compHp);
     console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp)
     if (userHp > 0 && compHp > 0) {
       var nextRound = attRound(userHp,compHp);
@@ -94,6 +95,7 @@ function attRound(userHp=50,compHp=50) {                   //Battle function cal
     userHp = newHp(userHp, attTotal);
     attTotal = userAttSecond();
     compHp = newHp(compHp, attTotal);
+    alert("Your hp: " + userHp + "        " + "comp Hp:" + compHp);
     console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp)
     if (userHp > 0 && compHp > 0) {
       nextRound = attRound(userHp,compHp);
@@ -119,9 +121,10 @@ function bossAttRound(userHp=50,compHp=80) {                   //Boss battle fun
     var compHp = newHp(compHp, attTotal);
     attTotal = compAttSecond();
     var userHp = newHp(userHp, attTotal);
-    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp)
+    alert("Your hp: " + userHp + "        " + "comp Hp:" + compHp);
+    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp);
     if (userHp > 0 && compHp > 0) {
-      var nextRound = attRound(userHp,compHp);
+      var nextRound = bossAttRound(userHp,compHp);
     }
     else {
       finalEnd(userHp,compHp);
@@ -132,16 +135,17 @@ function bossAttRound(userHp=50,compHp=80) {                   //Boss battle fun
     userHp = newHp(userHp, attTotal);
     attTotal = userAttSecond();
     compHp = newHp(compHp, attTotal);
-    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp)
+    alert("Your hp: " + userHp + "        " + "comp Hp:" + compHp);
+    console.log("user HP:" + userHp + "     " + "comp Hp:" + compHp);
     if (userHp > 0 && compHp > 0) {
-      nextRound = attRound(userHp,compHp);
+      nextRound = bossAttRound(userHp,compHp);
     }
     else {
       finalEnd(userHp,compHp);
     }
   }
   else if (userD20 = compD20) {
-    attRound();
+    bossAttRound();
   }
 
 }
@@ -234,26 +238,33 @@ function userAttMod() {
                           "         Super Punch= sp\n" +
                           "         Flaming Kick= fk\n" +
                           "         Thundering Chop= tc\n" +
-                          "         Barbaric Throw= bt\n", "'sp','fk','tc', or 'bt'");
+                          "         Barbaric Throw= bt\n", "'sp','fk','tc','bt' or 'im done'");
   if (userChoice === "sp") {
     var totalDamage = roll("d12") + (3 * roll("d4"));
+    alert("You threw a Speed Punch for " + totalDamage + "!");
     return totalDamage;
   }
   else if (userChoice === "fk") {
     var totalDamage = roll("d12") + (2 * roll("d6"));
+    alert("you threw a Flaming Kick for " + totalDamage + "!");
     return totalDamage;
   }
   else if (userChoice === "tc") {
     var totalDamage = roll("d20") + (1 * roll("d8"));
+    alert("You threw a Thunder Chop for " + totalDamage + "!");
     return totalDamage;
   }
   else if (userChoice === "bt") {
     var totalDamage = roll("d20") + (2 * roll("d6"));
+    alert("You exicuted a Barbaric Throw for " + totalDamage + "!");
     return totalDamage;
   }
+  else if (compChoice === "im done") {
+    alert("Thanks for playin!");
+  }
   else {
-    alert ("Oh no! you need to type 'sp' or 'fk'!");
-    userAttMod();
+    alert ("Oh no! you need to type 'sp','fk' or 'im done'!");
+    return userAttMod();
   }
 }
 function compDeffMod() {
@@ -272,15 +283,17 @@ function compAttMod() {
 
   if (compChoice == '1') {
     var totalDamage = roll("d12") + (3 * roll("d4"));
+    alert("He threw a Speed Punch for " + totalDamage + "!");
     return totalDamage;
   }
   else if (compChoice === '2') {
     var totalDamage = roll("d12") + (2 * roll("d6"));
+    alert("He threw a Flaming Kick for " + totalDamage + "!");
     return totalDamage;
   }
 }
 function userDeffMod() {
-  var compChoice = prompt("pick either High Block or Low Guard to add to your defence strength", "'hb' or 'lg'");
+  var compChoice = prompt("pick either High Block or Low Guard to add to your defence strength", "'hb','lg' or 'im done'");
   if (compChoice === "hb") {
     var totalDeff = roll("d10") + (3 * roll("d4"));
     return totalDeff;
@@ -289,9 +302,12 @@ function userDeffMod() {
     var totalDeff = roll("d10") + (2 * roll("d6"));
     return totalDeff;
   }
+  else if (compChoice === "im done") {
+    alert("Thanks for playin!");
+  }
   else {
-    alert ("Oh no! you need to type 'hb' or 'lg'!");
-    userDeffMod();
+    alert ("Oh no! you need to type 'hb' or 'lg' or 'im done'!");
+    return userDeffMod();
   }
 }
 //----------------------------------------------End Round Function----------------------------------------------------//
@@ -302,24 +318,24 @@ function end(currentUserHp,currentcompHp) {
   if (userHp <= 0) {
     var restart = prompt("Your Opponent overtakes you! you lose and black out! Play again?", "'y' or 'n'");
     if (restart === "y") {
-      attRound();
+      return attRound();
     }
     else if (restart === "n") {
-      alert ("GAME OVER! Thanks for playing!")
+      alert ("GAME OVER! Thanks for playing!");
     }
     else {
       alert ("Oh no! you need to type 'y' or 'n'!");
-      end();
+      return end();
     }
   }
   else if (compHp <= 0) {
     var response = prompt("You have beaten your opponent! Are you ready to move on to your next one, or can you handle the Grand Master!?", "'y','n' or 'gm'");
     if (response === "y") {
       alert("Your next challenger appears!");
-      AttRound();
+      return attRound();
     }
     else if (response === "n") {
-      alert ("GAME OVER! Thanks for playing!")
+      alert ("GAME OVER! Thanks for playing!");
     }
     else if (response === "gm") {
       alert("The Grand Master Approaches...")
@@ -329,7 +345,7 @@ function end(currentUserHp,currentcompHp) {
     }
     else {
       alert ("Oh no! you need to type 'y','n', or 'gm'!");
-      end();
+      return end();
     }
   }
 }
@@ -345,25 +361,25 @@ function finalEnd(currentUserHp,currentcompHp) {
       attRound();
     }
     else if (restart === "n") {
-      alert ("GAME OVER! Thanks for playing!")
+      alert ("GAME OVER! Thanks for playing!");
     }
     else {
       alert ("Oh no! you need to type 'y' or 'n'!");
-      end();
+      return finalEnd();
     }
   }
   else if (compHp <= 0) {
     var endGame = prompt("You have beaten the Grand Master and become the Tournament Champion! You have won Karate Tournament 2017! will you continue your reign of glory and vie for next years Championship?" , "'y' or 'n'");
     if (endGame === "y") {
       alert("You arrive the next year at the torunament. All eyes are on you this year as you defend your title!");
-      AttRound();
+      attRound();
     }
     else if (endGame === "n") {
-      alert ("You have solidified yourself into Karate history and will be remebered for your acheavements. Well done fighter!!")
+      alert ("You have solidified yourself into Karate history and will be remebered for your acheavements. Well done fighter!!");
     }
     else {
       alert ("Oh no! you need to type 'y','n', or 'gm'!");
-      finalEnd();
+      return finalEnd();
     }
   }
 }
@@ -377,7 +393,7 @@ function startGame() {
     attRound();
   }
   else if (start === "n") {
-    alert ("Come back when you are ready, Champion. Until then, train hard!")
+    alert ("Come back when you are ready, Champion. Until then, train hard!");
   }
   else {
     alert ("Oh no! you need to type 'y' or 'n'!");

@@ -1,14 +1,97 @@
+@font-face {
+  font-family: Outrun-Bold;
+  src: url(Outrun_future_Bold.otf);
+}
+@font-face {
+  font-family: Pixel-7;
+  src: url(computer_pixel-7.ttf);
+}
+body {
+  background-color: #2602b7;
+}
+#attackResult {
+  margin-left: 200px;
+  margin-top: -216px;
+}
+#attackResult1 {
+  margin-left: 200px;
+  margin-top: -216px;
+}
+
+.container {
+  background-color: #040204;
+  padding-bottom: 0px;
+  margin-bottom: 40px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 200px;
+}
+.Rules {
+  margin: 10%;
+
+}
 .startButton {
+  font-family: Outrun-Bold;
   font-size: 30px;
   background-color: #ff3399;
   color: #0066ff;
-  border: 2px solid #c2f10c;
-  border-radius: 10px;
-  margin: 50px;
-  
+  border: 2px solid #b300b3;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 15px;
+}
+.Button {
+  text-align: center;
+  padding-bottom: 40px;
 }
 .startButton:hover {
   -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
-    box-shadow: 0 12px 16px 0 #cccccc, 0 17px 50px 0 #cccccc;
+    box-shadow: 0 16px 16px 0 #cccccc, 0 17px 50px 0 #cccccc;
+}
+h1 {
+  text-align: center;
+  font-family: Outrun-Bold;
+  text-shadow: 2px;
+  color: #ff3399;
+  font-size: 60px;
+  margine-top: -40px;
+}
+h2 {
+  text-align: left;
+  margin-left: 10%;
+  font-family: Outrun-Bold;
+  color: #ff3399;
+  font-size: 30px;
+}
+.head {
+  font-family: Pixel-7;
+  color: #ffce99;
+  font-size: 50px;
+}
+ol {
+  font-family: Pixel-7;
+  color: #ffce99;
+  font-size: 30px;
+}
+.ender {
+  font-family: Pixel-7;
+  color: #ffce99;
+  font-size: 50px;
+}
+@media only screen and (max-width: 1076px) {
+.container {
+  margin-bottom: 40px;
+padding-top: 300px;
+}
+  #attackResult {
+padding-top: -216px;
+  display: none;}
+  #attackResult1 {
+padding-top: -216px;
+display: inline;
+  }
+}
+.Dance {
+  text-align: center;
 }
